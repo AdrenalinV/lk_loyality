@@ -1,0 +1,2 @@
+--CREATE Table demo (id INT,name Varchar(40));
+--INSERT INTO demo VALUES(1,'testName');

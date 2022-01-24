@@ -1,0 +1,11 @@
+server:
+  port: 8080
+  servlet:
+    context-patch: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lk_loyality
+    username: gb_user
+    password: gb_user
+    driver-class-name: org.postgresql.Driver
