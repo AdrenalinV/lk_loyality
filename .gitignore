@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+lk_loyality_front/node_modules
+lk_loyality_front/dist
