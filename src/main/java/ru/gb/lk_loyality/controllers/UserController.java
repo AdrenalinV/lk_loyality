@@ -19,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public UserDto getUser(@PathVariable Long id) {
         System.out.println("test");
         return userService.getUserDtoById(id).orElseThrow(() -> new ResourceNotFoundException("Пользователь с id = " + id + " не найден"));
