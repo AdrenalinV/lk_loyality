@@ -1,18 +1,18 @@
 package ru.gb.lk_loyality.utils;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.gb.lk_loyality.dto.UserDto;
 import ru.gb.lk_loyality.entities.User;
 import ru.gb.lk_loyality.services.CardService;
 import ru.gb.lk_loyality.services.CityService;
-import ru.gb.lk_loyality.services.StatusService;
 
 @Service
+@RequiredArgsConstructor
 public class MappingUtils {
 
-    private CityService cityService;
-    private StatusService statusService;
-    private CardService cardService;
+    private final CityService cityService;
+    private final CardService cardService;
 
 
     public UserDto mapToUserDto(User user) {
@@ -25,20 +25,22 @@ public class MappingUtils {
         userDto.setSex(user.getSex());
         userDto.setBirthday(user.getBirthday());
         userDto.setCity(user.getCity().getTitle());
-        userDto.setStatus(user.getStatus().getTitle());
+        User.Status status = User.Status.values()[user.getStatus()];
+        userDto.setStatus(status.toString());
         return userDto;
     }
 
     public User mapToUser(UserDto userDto) {
         User user = new User();
         user.setEmail(userDto.getEmail());
-        user.setCard(cardService.getCardByNumber(userDto.getCardNumber()));
+        user.setCard(cardService.getCardByNumber(userDto.getCardNumber()).get());
         user.setName(userDto.getName());
         user.setPhone(userDto.getPhone());
         user.setSex(userDto.getSex());
         user.setBirthday(userDto.getBirthday());
         user.setCity(cityService.getCityByTitle(userDto.getCity()));
-        user.setStatus(statusService.getStatusByTitle(userDto.getStatus()));
+        User.Status status = User.Status.valueOf(userDto.getStatus());
+        user.setStatus(status.ordinal());
         return user;
     }
 }
