@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /api/v1
+    context-path: /lk_loyality
 
 spring:
   datasource:
@@ -9,3 +9,5 @@ spring:
     username: gb_user
     password: gb_user
     driver-class-name: org.postgresql.Driver
+    jpa:
+      show-sql: true

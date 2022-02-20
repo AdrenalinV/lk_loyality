@@ -1,30 +1,22 @@
---CREATE Table demo (id INT,name Varchar(40));
---INSERT INTO demo VALUES(1,'testName');
+
 DROP TABLE IF EXISTS cities CASCADE;
 CREATE TABLE cities (
-                    id bigserial PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL
+                    id bigserial NOT NULL,
+                    title VARCHAR(255) UNIQUE NOT NULL,
+                    PRIMARY KEY (id)
 );
 INSERT INTO cities (id, title) VALUES
    (1, 'Москва'),
    (2, 'Санкт-Петербург');
 
-DROP TABLE IF EXISTS statuses CASCADE;
-CREATE TABLE statuses (
-                      id bigserial PRIMARY KEY,
-                      title VARCHAR(255) NOT NULL
-);
-INSERT INTO statuses (id, title) VALUES
-     (1, 'Золото'),
-     (2, 'Серебро'),
-     (3, 'Бронза');
-
 DROP TABLE IF EXISTS cards CASCADE;
 CREATE TABLE cards (
-                   id bigserial PRIMARY KEY,
+                   id bigserial NOT NULL,
                    cardnumber numeric(7) NOT NULL,
                    qrcode VARCHAR(13) NOT NULL,
-                   used BOOLEAN
+                   activebonus FLOAT DEFAULT(0.0),
+                   used BOOLEAN,
+                   PRIMARY KEY (id)
 );
 INSERT INTO cards (id, cardnumber, qrcode, used) VALUES
      (1, 1000001, '9999100000014', TRUE),
@@ -38,24 +30,16 @@ INSERT INTO cards (id, cardnumber, qrcode, used) VALUES
      (9, 1000009, '9999100000090', FALSE),
      (10, 1000010, '9999100000106', FALSE);
 
-DROP TABLE IF EXISTS bonuses CASCADE;
-CREATE TABLE bonuses (
-                     id bigserial PRIMARY KEY,
-                     card_id bigint REFERENCES cards(id),
-                     activebonus FLOAT
-);
-INSERT INTO bonuses (card_id, activebonus) VALUES
-   (1, 25.5),
-   (2, 5.8),
-   (3, 172.7);
 
 DROP TABLE IF EXISTS counters CASCADE;
 CREATE TABLE counters (
-                      id bigserial PRIMARY KEY,
-                      card_id bigint REFERENCES cards(id),
+                      id bigserial NOT NULL,
+                      card_id bigint NOT Null,
                       delta FLOAT NOT NULL,
                       delta_date_time timestamp NOT NULL,
-                      active_date DATE
+                      active_date DATE,
+                      PRIMARY KEY (id),
+                      FOREIGN KEY (card_id) REFERENCES cards(id)
 );
 INSERT INTO counters (card_id, delta, delta_date_time, active_date) VALUES
     (1, 10, '2021-11-01 10:05:06', '2021-11-11'),
@@ -99,19 +83,20 @@ INSERT INTO counters (card_id, delta, delta_date_time, active_date) VALUES
 
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
-                   id bigserial PRIMARY KEY,
+                   id bigserial NOT NULL,
                    email VARCHAR(255) UNIQUE NOT NULL,
                    password VARCHAR(255),
-                   card_id bigint REFERENCES cards(id),
+                   card_id bigint NOT NULL,
                    name VARCHAR(255),
                    phone VARCHAR(12),
                    sex VARCHAR(7),
                    birthday DATE,
-                   city_id bigint REFERENCES cities(id),
-                   status_id bigint REFERENCES statuses(id)
-);
-INSERT INTO users (email, password, card_id, name, phone, sex, birthday, city_id, status_id) VALUES
+                   city_id bigint not null,
+                   status bigint NOT NULL DEFAULT 1,
+                   PRIMARY KEY (id),
+                   FOREIGN KEY (city_id) REFERENCES cities(id),
+                   FOREIGN KEY (card_id) REFERENCES cards(id)
+                   );
+INSERT INTO users (email, password, card_id, name, phone, sex, birthday, city_id, status) VALUES
     ('1@1.ru', '{bcrypt}$2y$12$mFUdPh8.ESnhu.eyDjxrYuSigUIOboDP94mt7vuNhf604Yw0iuKQa', 1, 'Иванов Иван', '+79600001122', 'мужской', '1985-05-09', 2, 2),
     ('3@3.ru', '{bcrypt}$2y$12$mFUdPh8.ESnhu.eyDjxrYuSigUIOboDP94mt7vuNhf604Yw0iuKQa', 3, 'Катина Екатерина', '+79990004455', 'женский', '1995-03-08', 1, 1);
-INSERT INTO users (email, password, card_id, status_id) VALUES
-    ('2@2.ru', '{bcrypt}$2y$12$mFUdPh8.ESnhu.eyDjxrYuSigUIOboDP94mt7vuNhf604Yw0iuKQa', 2, 3);

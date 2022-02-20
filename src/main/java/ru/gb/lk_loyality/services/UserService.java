@@ -1,59 +1,49 @@
 package ru.gb.lk_loyality.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.gb.lk_loyality.dto.UserDto;
-import ru.gb.lk_loyality.entities.Counter;
 import ru.gb.lk_loyality.entities.User;
 import ru.gb.lk_loyality.repositories.UserRepository;
+import ru.gb.lk_loyality.utils.MappingUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final MappingUtils mapper;
 
+
+    /**
+     * метод получения UserDto по id user
+     *
+     * @param id идентификатор пользователя
+     * @return UserDto
+     */
     public Optional<UserDto> getUserDtoById(Long id) {
-        return userRepository.findById(id).map(UserDto::new);
+        return userRepository.findById(id).map(user -> mapper.mapToUserDto(user));
     }
 
-    /*
-    Получение активных бонусов. Сначала смотрим в таблице bonses, если там нет, то получаем сумму движений
+    /**
+     * Spring Security
+     * получение UserDetails по имени пользователя
+     *
+     * @param username имя пользователя
+     * @return обьект UserDetails
+     * @throws UsernameNotFoundException
      */
-    public Float getBalanceByIdUser(Long id) {
-        Float balance = 0f;
-        try {
-            balance = userRepository.getById(id).getCard().getBonus().getActiveBonus();
-            return balance;
-        } catch (NullPointerException e) {
-            balance = getCountersByUserId(id);
-            return balance;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
-    }
-
-    /*
-    Метод по Id пользователя проходит по таблице counters, и возвращает сумму бонусов у которых дата активации
-    меньше текущей даты или не заполнена
-     */
-    private Float getCountersByUserId(Long id) {
-        Float sum = 0f;
-        try {
-            List<Counter> counters = userRepository.getById(id).getCard().getCounters();
-            for (Counter c: counters) {
-                if (c.getActiveDate() == null) {
-                    sum += c.getDelta();
-                } else if (c.getActiveDate().before(Calendar.getInstance())) {
-                    sum += c.getDelta();
-                }
-            }
-        } catch (NullPointerException e) {
-            return 0f;
-        }
-        return sum;
+        return user;
     }
 }
