@@ -56,5 +56,13 @@ public class CardService {
         return newBonus;
     }
 
-
+    /**
+     * метод получения неактивных бонусов
+     * @param cardNumber номер карты
+     * @return количество неактивных бонусов
+     */
+    public Double getNoActiveBonusByCardNumber(Integer cardNumber){
+        Card tmpCard= repository.findCardByCardNumber(cardNumber).orElseThrow(()-> new IllegalArgumentException(""));
+        return counterService.getSumNoActiveBonusByCardId(tmpCard.getId());
+    }
 }

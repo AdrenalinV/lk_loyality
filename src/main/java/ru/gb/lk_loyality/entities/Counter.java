@@ -25,4 +25,7 @@ public class Counter {
 
     @Column(name = "active_date")
     private LocalDate activeDate;
+
+    @Column(name = "document_id")
+    private Long documentId;
 }
