@@ -29,6 +29,24 @@ public class CounterServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Получение суммы не активных бонусов")
+    void getSumNoActiveBonusByCardIdTest() {
+        Mockito.when(repository.findByCardId(any(Long.class))).thenReturn(generateListCounter());
+        double expect = service.getSumNoActiveBonusByCardId(1L);
+        Assertions.assertEquals(expect, 2.2, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Список движений бонусов")
+    void getListCountersByPeriod() {
+        Mockito
+                .when(repository.findByCardIdAndDeltaDateTimeBetweenOrderByDeltaDateTime(any(Long.class),any(LocalDateTime.class),any(LocalDateTime.class) ))
+                .thenReturn(generateListCounter());
+        Integer expect = service.getListCountersByPeriod(1L, LocalDate.parse("2022-02-01"), LocalDate.parse("2022-02-20")).size();
+        Assertions.assertEquals(expect, 4);
+    }
+
     private List<Counter> generateListCounter() {
         Counter count1 = new Counter();
         count1.setId(1L);
