@@ -26,8 +26,4 @@ public class Document {
 
     @Column(name = "card_id")
     private Long cardId;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="document_id", referencedColumnName = "id")
-    private List<Counter> counters;
 }

@@ -3,8 +3,6 @@ package ru.gb.lk_loyality.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.lk_loyality.dto.CounterDto;
-import ru.gb.lk_loyality.entities.Card;
-import ru.gb.lk_loyality.entities.Response;
 import ru.gb.lk_loyality.exceptions.InvalidDateException;
 import ru.gb.lk_loyality.services.CounterService;
 
@@ -47,10 +45,4 @@ public class CounterController {
         }
         return counterService.getListCountersByPeriod(cardId, from, to);
     }
-
-    @ExceptionHandler(InvalidDateException.class)
-    public Response handleException(InvalidDateException e) {
-        return new Response(e.getMessage());
-    }
-
 }

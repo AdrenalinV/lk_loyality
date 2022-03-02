@@ -2,7 +2,6 @@ package ru.gb.lk_loyality.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.gb.lk_loyality.entities.Response;
 import ru.gb.lk_loyality.exceptions.InvalidDateException;
 import ru.gb.lk_loyality.services.DocumentService;
 
@@ -24,7 +23,7 @@ public class DocumentController {
      * @param endDate конец периода
      * @return сумма покупок за период
      */
-    @GetMapping
+    @GetMapping("/sum")
     public Double getSumDocuments(
             @RequestParam Long cardId,
             @RequestParam(defaultValue = "") String beginDate,
@@ -43,10 +42,4 @@ public class DocumentController {
         }
         return documentService.getSumAmount(cardId, from, to);
     }
-
-    @ExceptionHandler(InvalidDateException.class)
-    public Response handleException(InvalidDateException e) {
-        return new Response(e.getMessage());
-    }
-
 }
