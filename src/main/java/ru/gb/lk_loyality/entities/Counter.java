@@ -3,7 +3,8 @@ package ru.gb.lk_loyality.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "counters")
@@ -13,16 +14,18 @@ public class Counter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id")
-    private Card card;
+    @Column(name = "card_id")
+    private Long cardId;
 
     @Column(name = "delta")
-    private Float delta;
+    private Double delta;
 
     @Column(name = "delta_date_time")
-    private Calendar deltaDateTime;
+    private LocalDateTime deltaDateTime;
 
     @Column(name = "active_date")
-    private Calendar activeDate;
+    private LocalDate activeDate;
+
+    @Column(name = "document_id")
+    private Long documentId;
 }

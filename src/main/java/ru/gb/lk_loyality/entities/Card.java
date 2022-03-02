@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name= "cards")
+@Table(name = "cards")
 @Data
 public class Card {
     @Id
@@ -22,12 +22,12 @@ public class Card {
     @Column(name = "used")
     private Boolean isUsed;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Bonus bonus;
+    @Column(name = "activebonus")
+    private Double activeBonus;
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="card_id", referencedColumnName = "id")
     private List<Counter> counters;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User user;
+
 }
