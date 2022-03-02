@@ -16,6 +16,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Получение ДТО пользователя по ID
+     * @param id пользователя
+     * @return ДТО пользователя
+     */
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable Long id) {
         return userService.getUserDtoById(id)

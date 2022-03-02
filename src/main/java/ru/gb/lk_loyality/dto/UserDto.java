@@ -2,10 +2,8 @@ package ru.gb.lk_loyality.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.gb.lk_loyality.entities.User;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 
 @Data
 @NoArgsConstructor

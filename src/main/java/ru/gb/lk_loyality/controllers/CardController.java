@@ -16,21 +16,36 @@ import ru.gb.lk_loyality.services.CardService;
 public class CardController {
     private final CardService cardService;
 
-
+    /**
+     * Возвращает ДТО карты по номеру
+     * @param cardNumber номер карты
+     * @return ДТО карты
+     */
     @GetMapping("/{cardNumber}")
-    public CardDto getCardByNumber(@PathVariable(name = "cardNumber") Integer cardNumber){
-        CardDto cardDto = cardService.getCardDtoByNumber(cardNumber)
+    public CardDto getCardByNumber(@PathVariable(name = "cardNumber") Integer cardNumber) {
+        return cardService.getCardDtoByNumber(cardNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Карта с номером = %d не найдена.", cardNumber))
                 );
-        return cardDto;
     }
+
+    /**
+     * Обновляет количество активных бонусов и записывает в соответствующее поле в таблице
+     * @param cardNumber номер карты
+     * @return количество активных бонусов
+     */
     @GetMapping("/balance/{cardNumber}")
-    public Double getBalanceByNumber(@PathVariable(name = "cardNumber") Integer cardNumber){
-        Double balance = cardService.updateActiveBonusByCardNumber(cardNumber);
-        return balance;
+    public Double getBalanceByNumber(@PathVariable(name = "cardNumber") Integer cardNumber) {
+        return cardService.updateActiveBonusByCardNumber(cardNumber);
     }
 
-
-
+    /**
+     * Возвращает количество ещё не активных бонусов
+     * @param cardNumber номер карты
+     * @return количество бонусов, дата активации которых ещё не наступила
+     */
+    @GetMapping("/noactivebalance/{cardNumber}")
+    public Double getNoActiveBalanceByNumber(@PathVariable(name = "cardNumber") Integer cardNumber) {
+        return cardService.getNoActiveBonusByCardNumber(cardNumber);
+    }
 }
