@@ -45,11 +45,12 @@ public class CardService {
 
     /**
      * метод обновления бонусов
+     *
      * @param cardNumber номер карты
      * @return обновленный баланс
      */
-    public Double updateActiveBonusByCardNumber(Integer cardNumber){
-        Card tmpCard= repository.findCardByCardNumber(cardNumber).orElseThrow(()-> new IllegalArgumentException(""));
+    public Double updateActiveBonusByCardNumber(Integer cardNumber) {
+        Card tmpCard = repository.findCardByCardNumber(cardNumber).orElseThrow(() -> new IllegalArgumentException(""));
         Double newBonus = counterService.getSumBonusByCardId(tmpCard.getId());
         tmpCard.setActiveBonus(newBonus);
         repository.save(tmpCard);
@@ -57,12 +58,30 @@ public class CardService {
     }
 
     /**
+     * метод создание новой карты
+     *
+     * @return возвращает созданный объект
+     */
+    public Card createCard() {
+        Integer cardNumber = repository.lastCardNumber();
+        cardNumber = cardNumber == null ? 1000001 : cardNumber + 1;
+        Card newCard = new Card();
+        newCard.setIsUsed(true);
+        //TODO алгоритм генерации qr кода
+        newCard.setQrCode("qwerty");
+        newCard.setCardNumber(cardNumber);
+        newCard.setActiveBonus(0.0);
+        return repository.save(newCard);
+    }
+
+    /**
      * метод получения неактивных бонусов
+     *
      * @param cardNumber номер карты
      * @return количество неактивных бонусов
      */
-    public Double getNoActiveBonusByCardNumber(Integer cardNumber){
-        Card tmpCard= repository.findCardByCardNumber(cardNumber).orElseThrow(()-> new IllegalArgumentException(""));
+    public Double getNoActiveBonusByCardNumber(Integer cardNumber) {
+        Card tmpCard = repository.findCardByCardNumber(cardNumber).orElseThrow(() -> new IllegalArgumentException(""));
         return counterService.getSumNoActiveBonusByCardId(tmpCard.getId());
     }
 }

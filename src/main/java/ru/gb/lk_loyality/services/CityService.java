@@ -11,7 +11,21 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
+    /**
+     *
+     * @param title название города
+     * @return возвращает найденный объект
+     */
     public City getCityByTitle(String title) {
         return cityRepository.findCityByTitle(title);
+    }
+
+    /**
+     *
+     * @param city объект для сохранения
+     * @return возвращает сохраненный объект
+     */
+    public City save(City city) {
+        return cityRepository.save(city);
     }
 }
