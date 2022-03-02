@@ -2,7 +2,6 @@ package ru.gb.lk_loyality.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,7 +10,7 @@ import java.util.Collection;
 @Table(name = "roles")
 @Data
 @NoArgsConstructor
-public class Role implements GrantedAuthority {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -21,8 +20,4 @@ public class Role implements GrantedAuthority {
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    @Override
-    public String getAuthority() {
-        return getName();
-    }
 }

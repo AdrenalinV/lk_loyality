@@ -6,4 +6,5 @@ import ru.gb.lk_loyality.entities.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+    Role findByName(String role_user);
 }

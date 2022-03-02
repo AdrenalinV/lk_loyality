@@ -70,7 +70,17 @@ public class CardServiceTest {
         Mockito.verify(repository).save(any(Card.class));
     }
 
+    @Test
+    @DisplayName("Проверка создания новой карты")
+    void createCardTest(){
+        Mockito.when(repository.lastCardNumber()).thenReturn(123456);
+        Mockito.when(repository.save(any(Card.class))).thenReturn(generateCard());
 
+        service.createCard();
+        Mockito.verify(repository).lastCardNumber();
+        Mockito.verify(repository).save(any(Card.class));
+
+    }
 
     private Card generateCard(){
         Card card = new Card();

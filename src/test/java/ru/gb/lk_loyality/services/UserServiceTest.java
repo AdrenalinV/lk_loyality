@@ -4,14 +4,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.gb.lk_loyality.dto.UserDto;
 import ru.gb.lk_loyality.entities.Card;
 import ru.gb.lk_loyality.entities.City;
+import ru.gb.lk_loyality.entities.Role;
 import ru.gb.lk_loyality.entities.User;
+import ru.gb.lk_loyality.repositories.RoleRepository;
 import ru.gb.lk_loyality.repositories.UserRepository;
 import ru.gb.lk_loyality.utils.MappingUtils;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -20,8 +24,17 @@ import static org.mockito.ArgumentMatchers.eq;
 
 public class UserServiceTest {
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final CardService cardService = Mockito.mock(CardService.class);
+    private final CityService cityService = Mockito.mock(CityService.class);
+    private final RoleRepository roleRepository = Mockito.mock(RoleRepository.class);
     private final MappingUtils mapper = Mockito.mock(MappingUtils.class);
-    private final UserService userService = new UserService(userRepository, mapper);
+    private final PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
+    private final UserService userService = new UserService(userRepository,
+            cardService,
+            cityService,
+            roleRepository,
+            encoder,
+            mapper);
 
     @Test
     @DisplayName("Тестирование получения UserDto по user id")
@@ -39,6 +52,44 @@ public class UserServiceTest {
         Assertions.assertEquals(expect, actual);
     }
 
+    @Test
+    @DisplayName("Проверка сохранения нового объекта")
+    void saveNewUser(){
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_USER");
+        User user = new User();
+        user.setName("Vadim");
+        user.setEmail("mail@mail.ru");
+        user.setPassword("test");
+
+        Mockito.when(roleRepository.findByName("ROLE_USER")).thenReturn(role);
+        Mockito.when(cityService.getCityByTitle(any())).thenReturn(generateCity());
+        Mockito.when(cardService.createCard()).thenReturn(generateCard());
+
+        userService.saveUser(user);
+
+        Mockito.verify(roleRepository).findByName("ROLE_USER");
+        Mockito.verify(cityService).getCityByTitle(any());
+        Mockito.verify(cardService).createCard();
+        Mockito.verify(userRepository).save(any(User.class));
+    }
+    @Test
+    @DisplayName("Проверка сохранения нового объекта")
+    void saveUser(){
+
+        User user = generateUser();
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_USER");
+        user.setRoles(Collections.singletonList(role));
+        userService.saveUser(user);
+
+        Mockito.verify(roleRepository, Mockito.never()).findByName(any());
+        Mockito.verify(cityService, Mockito.never()).getCityByTitle(any());
+        Mockito.verify(cardService, Mockito.never()).createCard();
+        Mockito.verify(userRepository).save(eq(user));
+    }
 
     private User generateUser() {
         User user = new User();
