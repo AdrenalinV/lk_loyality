@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findAllByCardIdAndDateTimeBetween(Long cardId, LocalDateTime beginDate, LocalDateTime endDate);
+    List<Document> findAllByCardId(Long cardId);
 }
