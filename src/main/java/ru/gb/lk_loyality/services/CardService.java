@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.gb.lk_loyality.dto.CardDto;
 import ru.gb.lk_loyality.entities.Card;
 import ru.gb.lk_loyality.repositories.CardRepository;
+import ru.gb.lk_loyality.utils.QRGenerator;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -67,8 +68,7 @@ public class CardService {
         cardNumber = cardNumber == null ? 1000001 : cardNumber + 1;
         Card newCard = new Card();
         newCard.setIsUsed(true);
-        //TODO алгоритм генерации qr кода
-        newCard.setQrCode("qwerty");
+        newCard.setQrCode(QRGenerator.generateQR(Integer.toString(cardNumber)));
         newCard.setCardNumber(cardNumber);
         newCard.setActiveBonus(0.0);
         return repository.save(newCard);
