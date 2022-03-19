@@ -2,18 +2,22 @@ package ru.gb.lk_loyality.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.gb.lk_loyality.dto.CounterResponseDto;
+import ru.gb.lk_loyality.dto.DocumentResponseDto;
 import ru.gb.lk_loyality.dto.UserDto;
+import ru.gb.lk_loyality.entities.Counter;
+import ru.gb.lk_loyality.entities.Document;
 import ru.gb.lk_loyality.entities.User;
 import ru.gb.lk_loyality.services.CardService;
 import ru.gb.lk_loyality.services.CityService;
+import ru.gb.lk_loyality.services.DocumentService;
 
 @Service
 @RequiredArgsConstructor
-public class MappingUtils {
+public class UserMapper {
 
     private final CityService cityService;
     private final CardService cardService;
-
 
     public UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();

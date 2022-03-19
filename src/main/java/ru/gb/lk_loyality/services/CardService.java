@@ -6,6 +6,8 @@ import ru.gb.lk_loyality.dto.CardDto;
 import ru.gb.lk_loyality.entities.Card;
 import ru.gb.lk_loyality.repositories.CardRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CardService {
 
     private final CardRepository repository;
-    private final CounterService counterService;
+//    private final CounterService counterService;
 
 
     public Optional<Card> getCardByNumber(Integer cardNumber) {
@@ -51,7 +53,8 @@ public class CardService {
      */
     public Double updateActiveBonusByCardNumber(Integer cardNumber) {
         Card tmpCard = repository.findCardByCardNumber(cardNumber).orElseThrow(() -> new IllegalArgumentException(""));
-        Double newBonus = counterService.getSumBonusByCardId(tmpCard.getId());
+//        Double newBonus = counterService.getSumBonusByCardId(tmpCard.getId());
+        Double newBonus = repository.getSumBonusByCardId(tmpCard.getId());
         tmpCard.setActiveBonus(newBonus);
         repository.save(tmpCard);
         return newBonus;
@@ -82,6 +85,30 @@ public class CardService {
      */
     public Double getNoActiveBonusByCardNumber(Integer cardNumber) {
         Card tmpCard = repository.findCardByCardNumber(cardNumber).orElseThrow(() -> new IllegalArgumentException(""));
-        return counterService.getSumNoActiveBonusByCardId(tmpCard.getId());
+//        return counterService.getSumNoActiveBonusByCardId(tmpCard.getId());
+        return repository.getSumNoActiveBonusByCardId(tmpCard.getId());
+    }
+
+    /**
+     * метод для добавления карт в базу
+     * @param cardsDto
+     * @return список не добавленных карт
+     */
+    public List<CardDto> addCards(List<CardDto> cardsDto) {
+        List<CardDto> errors = new ArrayList<>();
+        List<Integer> cardNumbers = repository.findAllCardsNumbers();
+        for (CardDto cardDto : cardsDto) {
+            if (!cardNumbers.contains(cardDto.getCardNumber())) {
+                Card card = new Card();
+                card.setCardNumber(cardDto.getCardNumber());
+                card.setQrCode(cardDto.getQrCode());
+                card.setActiveBonus(cardDto.getActiveBonus() != null ? cardDto.getActiveBonus() : 0);
+                card.setIsUsed(cardDto.getIsUsed() != null ? cardDto.getIsUsed() : false);
+                repository.save(card);
+            } else {
+                errors.add(cardDto);
+            }
+        }
+        return errors;
     }
 }

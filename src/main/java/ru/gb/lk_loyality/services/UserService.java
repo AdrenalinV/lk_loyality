@@ -11,7 +11,7 @@ import ru.gb.lk_loyality.entities.Role;
 import ru.gb.lk_loyality.entities.User;
 import ru.gb.lk_loyality.repositories.RoleRepository;
 import ru.gb.lk_loyality.repositories.UserRepository;
-import ru.gb.lk_loyality.utils.MappingUtils;
+import ru.gb.lk_loyality.utils.UserMapper;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class UserService {
     private final CityService cityService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MappingUtils mapper;
+    private final UserMapper mapper;
 
     /**
      * дефолтное значение города

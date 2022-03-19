@@ -4,10 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.gb.lk_loyality.entities.Counter;
 import ru.gb.lk_loyality.entities.Document;
-import ru.gb.lk_loyality.repositories.CounterRepository;
 import ru.gb.lk_loyality.repositories.DocumentRepository;
+import ru.gb.lk_loyality.utils.DocumentMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,7 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 public class DocumentServiceTest {
 
     private final DocumentRepository repository = Mockito.mock(DocumentRepository.class);;
-    private final DocumentService service = new DocumentService(repository);
+    private final DocumentMapper mapper = Mockito.mock(DocumentMapper.class);
+    private final DocumentService service = new DocumentService(repository, mapper);
 
     @Test
     @DisplayName("Сумма покупок за выбранный период")
