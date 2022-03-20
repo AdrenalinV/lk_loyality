@@ -25,7 +25,7 @@ public class MappingUtilsTest {
     @Test
     void userToUserDto() {
 
-        MappingUtils mappingUtils = new MappingUtils(cityService, cardService);
+        UserMapper mappingUtils = new UserMapper(cityService, cardService);
         UserDto expected = mappingUtils.mapToUserDto(generateUser());
         UserDto actual = generateUserDto();
         Assertions.assertEquals(expected,actual);
@@ -39,7 +39,7 @@ public class MappingUtilsTest {
         Mockito.when(cityService.getCityByTitle(any(String.class))).thenReturn(generateCity());
         Mockito.when(cardService.getCardByNumber(any())).thenReturn(Optional.of(generateCard()));
 
-        MappingUtils mappingUtils = new MappingUtils(cityService, cardService);
+        UserMapper mappingUtils = new UserMapper(cityService, cardService);
         UserDto userDto = generateUserDto();
         User expected = mappingUtils.mapToUser(userDto);
         User actual = generateUser();

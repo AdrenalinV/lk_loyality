@@ -1,14 +1,14 @@
 package ru.gb.lk_loyality.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import ru.gb.lk_loyality.dto.CardDto;
 import ru.gb.lk_loyality.exceptions.ResourceNotFoundException;
 import ru.gb.lk_loyality.services.CardService;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cards")
@@ -47,5 +47,17 @@ public class CardController {
     @GetMapping("/noactivebalance/{cardNumber}")
     public Double getNoActiveBalanceByNumber(@PathVariable(name = "cardNumber") Integer cardNumber) {
         return cardService.getNoActiveBonusByCardNumber(cardNumber);
+    }
+
+    /**
+     * Добавляет карты в бд
+     * @param requestDto список ДТО карт
+     * @return список не добавленных карт
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<CardDto> addCards(@RequestBody List<CardDto> requestDto) {
+        return cardService.addCards(requestDto);
     }
 }

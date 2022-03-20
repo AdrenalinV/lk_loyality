@@ -1,14 +1,19 @@
 package ru.gb.lk_loyality.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.lk_loyality.dto.CounterDto;
+import ru.gb.lk_loyality.dto.CounterResponseDto;
 import ru.gb.lk_loyality.exceptions.InvalidDateException;
+import ru.gb.lk_loyality.exceptions.ResourceNotFoundException;
 import ru.gb.lk_loyality.services.CounterService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/counters")
@@ -44,5 +49,21 @@ public class CounterController {
             }
         }
         return counterService.getListCountersByPeriod(cardId, from, to);
+    }
+
+    /**
+     * Добавление движений бонусов под правами администратора
+     * @param requestDto список CounterResponseDto для добавления
+     * @return список CounterResponseDto которые не удалось добавить
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<CounterResponseDto> addCounters(@RequestBody List<CounterResponseDto> requestDto) {
+        try {
+            return counterService.addCounters(requestDto);
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException("Ошибка входных данных.");
+        }
     }
 }

@@ -12,7 +12,7 @@ import ru.gb.lk_loyality.entities.Role;
 import ru.gb.lk_loyality.entities.User;
 import ru.gb.lk_loyality.repositories.RoleRepository;
 import ru.gb.lk_loyality.repositories.UserRepository;
-import ru.gb.lk_loyality.utils.MappingUtils;
+import ru.gb.lk_loyality.utils.UserMapper;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class UserServiceTest {
     private final CardService cardService = Mockito.mock(CardService.class);
     private final CityService cityService = Mockito.mock(CityService.class);
     private final RoleRepository roleRepository = Mockito.mock(RoleRepository.class);
-    private final MappingUtils mapper = Mockito.mock(MappingUtils.class);
+    private final UserMapper mapper = Mockito.mock(UserMapper.class);
     private final PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
     private final UserService userService = new UserService(userRepository,
             cardService,

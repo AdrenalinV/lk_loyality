@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.gb.lk_loyality.entities.Counter;
 import ru.gb.lk_loyality.repositories.CounterRepository;
+import ru.gb.lk_loyality.utils.CounterMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 public class CounterServiceTest {
     private final CounterRepository repository = Mockito.mock(CounterRepository.class);
-    private final CounterService service = new CounterService(repository);
+    private final CounterMapper mapper = Mockito.mock(CounterMapper.class);
+    private final CounterService service = new CounterService(repository, mapper);
     @Test
     @DisplayName("Получение суммы бонусов")
     void getSumBonusByCardIdTest() {

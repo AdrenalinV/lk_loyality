@@ -18,8 +18,8 @@ import static org.mockito.ArgumentMatchers.eq;
 
 public class CardServiceTest {
     private final CardRepository repository = Mockito.mock(CardRepository.class);
-    private final CounterService counterService = Mockito.mock(CounterService.class);
-    private final CardService service = new CardService(repository, counterService);
+//    private final CounterService counterService = Mockito.mock(CounterService.class);
+    private final CardService service = new CardService(repository);
 
     @Test
     @DisplayName("Проверка возврата баланса по номеру карты")
@@ -59,14 +59,14 @@ public class CardServiceTest {
     @DisplayName("Обновление баланса по карте")
     void updateBonusByCardNumber(){
         Mockito.when(repository.findCardByCardNumber(any(Integer.class))).thenReturn(Optional.of(generateCard()));
-        Mockito.when(counterService.getSumBonusByCardId(any(Long.class))).thenReturn(1234.56);
+        Mockito.when(repository.getSumBonusByCardId(any(Long.class))).thenReturn(1234.56);
 
         Double expect = service.updateActiveBonusByCardNumber(123456);
 
 
         Assertions.assertEquals(expect,1234.56);
         Mockito.verify(repository).findCardByCardNumber(eq(123456));
-        Mockito.verify(counterService).getSumBonusByCardId(eq(123L));
+        Mockito.verify(repository).getSumBonusByCardId(eq(123L));
         Mockito.verify(repository).save(any(Card.class));
     }
 

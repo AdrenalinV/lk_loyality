@@ -3,12 +3,15 @@ package ru.gb.lk_loyality.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.gb.lk_loyality.dto.CounterDto;
+import ru.gb.lk_loyality.dto.CounterResponseDto;
 import ru.gb.lk_loyality.entities.Counter;
 import ru.gb.lk_loyality.repositories.CounterRepository;
+import ru.gb.lk_loyality.utils.CounterMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class CounterService {
 
     private final CounterRepository repository;
+    private final CounterMapper counterMapper;
 
     /**
      * Метод по CardId возвращает сумму бонусов у которых дата активации
@@ -70,11 +74,38 @@ public class CounterService {
      */
     public List<CounterDto> getListCountersByPeriod(Long cardId, LocalDate begin, LocalDate end) {
         LocalDateTime beginDate, endDate;
-        beginDate = LocalDateTime.of(begin, LocalTime.parse("00:00:00"));
-        endDate = LocalDateTime.of(end, LocalTime.parse("23:59:59"));
+        beginDate = LocalDateTime.of(begin, LocalTime.MIN);
+        endDate = LocalDateTime.of(end, LocalTime.MAX);
         return repository.findByCardIdAndDeltaDateTimeBetweenOrderByDeltaDateTime(cardId, beginDate, endDate).stream()
                 .map(CounterDto::new)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Метод добавления счётчиков в базу
+     * @param counterResponseDtos список CounterResponseDto для добавления
+     * @return список CounterResponseDto которые не удалось добавить
+     */
+    public List<CounterResponseDto> addCounters(List<CounterResponseDto> counterResponseDtos) {
+        List<CounterResponseDto> errors = new ArrayList<>();
+        for (CounterResponseDto counterDto : counterResponseDtos) {
+            Counter counter = counterMapper.mapToCounter(counterDto);
+            if (!isDoubleCounter(counter)) {
+                repository.save(counter);
+            } else {
+                errors.add(counterDto);
+            }
+        }
+        return errors;
+    }
+
+    /**
+     * Метод проверки наличия счётчика в базе
+     * @param counter счётчик
+     * @return true или false
+     */
+    public boolean isDoubleCounter(Counter counter) {
+        return repository.findCounterByCardIdAndDeltaAndDocumentId(counter.getCardId(), counter.getDelta(), counter.getDocumentId()).isPresent();
     }
 
 }
