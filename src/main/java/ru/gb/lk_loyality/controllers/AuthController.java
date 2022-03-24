@@ -25,11 +25,13 @@ public class AuthController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody SignUpRequestDto requestDto) {
-        User user = new User();
-        user.setPassword(requestDto.getPassword());
-        user.setName(requestDto.getUserName());
-        user.setEmail(requestDto.getEmail());
-        service.saveUser(user);
+        if(requestDto.getPassword().equals(requestDto.getPasPassword())){
+            User user = new User();
+            user.setPassword(requestDto.getPassword());
+            user.setName(requestDto.getUserName());
+            user.setEmail(requestDto.getEmail());
+            service.saveUser(user);
+        }
     }
 
     @PostMapping("/login")
@@ -37,7 +39,11 @@ public class AuthController {
         User user = service.findByNameAndPassword(request.getUserName(), request.getPassword());
         List<String> roles = new ArrayList<>();
         user.getRoles().forEach(role -> roles.add(role.getName()));
-        UserInfo userInfo = UserInfo.builder().userName(user.getName()).id(user.getId()).roles(roles).build();
+        UserInfo userInfo = UserInfo.builder()
+                .userName(user.getName())
+                .id(user.getId())
+                .card_id(user.getCard().getId())
+                .roles(roles).build();
         String token = tokenService.generateToken(userInfo);
         return new AuthResponseDto(token);
     }

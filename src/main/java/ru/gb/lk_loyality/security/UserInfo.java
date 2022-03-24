@@ -14,6 +14,7 @@ import java.util.List;
 public class UserInfo {
     private Long id;
     private String userName;
+    private Long card_id;
     private List<String> roles;
 
 }
