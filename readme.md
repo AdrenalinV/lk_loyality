@@ -29,3 +29,4 @@
   - пример настроек в файле pgAdmin_setup.png
 
 Доска проекта: [Trello](https://trello.com/b/vz4LtS5Z/программа-лояльности)
+Видео призентации проекта: [youTobe](https://youtu.be/3tE1_iesrTs)
