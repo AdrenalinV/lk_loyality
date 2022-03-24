@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/vendors/ti-icons/css/themify-icons.css" th:ref="@{/vendors/ti-icons/css/themify-icons.css}">
+    <link rel="stylesheet" href="../static/css/vertical-layout-light/style.css" th:href="@{/css/vertical-layout-light/style.css}">
+    <link rel="shortcut icon" href="../static/images/favicon.png" th:href="@{/images/favicon.png}" />
+</head>
+
+<body>
+<div class="container-scroller">
+    <div th:insert="~{nav-bar.html::top-bar}"/>
+    <div class="container-fluid page-body-wrapper">
+        <div th:insert="~{nav-bar.html::nav-bar}"/>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="row">
+                            <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                <h3 class="font-weight-bold">Детализация покупок</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Выберите период</p>
+                                <form class="form-sample"th:action="@{/front/documents}"
+                                      method="POST">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">С</label>
+                                                <div class="col-sm-9">
+                                                    <input placeholder="Дата начала" type="date" id="begin"
+                                                           class="form-control" th:value="${begin}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">По</label>
+                                                <div class="col-sm-9">
+                                                    <input placeholder="Дата окончания" type="date" id="end"
+                                                           class="form-control" th:value="${end}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group row">
+                                                <button type="submit" class="btn btn-primary mr-2">Применить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-borderless">
+                                        <thead>
+                                        <tr>
+                                            <th>Номер документа</th>
+                                            <th>Дата операции</th>
+                                            <th>Сумма</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="document : ${documents}">
+                                            <td th:text="${document.number}">07.03.2022</td>
+                                            <td th:text="${document.dateTime}">20.03.20222</td>
+                                            <td class="font-weight-bold text-success" th:text="${document.sum}">1000</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021. Premium <a
+                    href="@{https://www.bootstrapdash.com/}" target="_blank">Bootstrap admin template</a> from BootstrapDash.
+              All rights reserved.</span>
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i
+                            class="ti-heart text-danger ml-1"></i></span>
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="vendors/js/vendor.bundle.base.js"></script>
+
+</body>
+
+</html>
